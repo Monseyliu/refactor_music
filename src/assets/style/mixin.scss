@@ -1,0 +1,99 @@
+// 全局样式 混入
+$bgColor: #00bcd4;
+$darkColor: #333;
+$lightDark: #f1f1f1;
+$yellowColor: #ff9300;
+
+// 颜色定义规范 music_h5适用
+$color-background: #222;
+$color-background-d: rgba(0, 0, 0, 0.3);
+$color-highlight-background: #333;
+$color-dialog-background: #666;
+$color-theme: #ffcd32;
+$color-theme-d: rgba(255, 205, 49, 0.5);
+$color-sub-theme: #d93f30;
+$color-text: #fff;
+$color-text-d: rgba(255, 255, 255, 0.3);
+$color-text-l: rgba(255, 255, 255, 0.5);
+$color-text-ll: rgba(255, 255, 255, 0.8);
+
+
+//字体定义规范 1rem=50px
+$font-size-small-s: .2rem;
+$font-size-small: .24rem;
+$font-size-medium: .28rem;
+$font-size-medium-x: .32rem;
+$font-size-large: .36rem;
+$font-size-large-x: .44rem;
+
+// 标准头部高度 .86rem
+$headHeight: .88rem;
+// refactor_music使用的头部高度
+
+// 文字不换号省略号
+@mixin ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+// 去除inputbutton样式
+@mixin clearBtn {
+    background: none;
+    outline: none;
+    border: none;
+}
+// 宽高 
+@mixin wh($width,$height){
+    width: $width;
+    height: $height;
+}
+// 颜色字号
+@mixin sizeColor($size, $color) {
+    font-size: $size;
+    color: $color;
+}
+// flex
+@mixin flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+@mixin flex-all-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@mixin flex-align-center {
+    display: flex;
+    align-items: center;
+}
+
+// 背景图片
+@mixin bg-image($url) {
+  background-image: url($url + "@2x.png");
+  @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3){
+ background-image: url($url + "@3x.png");
+    }
+}
+
+// 扩展点击区域
+@mixin extend-click() {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    }
+}
+
+// fixed 定位全屏
+@mixin fixed-full-screen{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
