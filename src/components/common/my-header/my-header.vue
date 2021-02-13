@@ -31,7 +31,7 @@ export default {
     display: inline-block;
     vertical-align: top;
     background-size: 0.6rem 0.64rem;
-    margin: 0.12rem 0.18rem 0 0;
+    margin: 0.18rem 0.18rem 0 0;
   }
   .text {
     display: inline-block;
