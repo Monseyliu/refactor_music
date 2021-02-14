@@ -1,6 +1,7 @@
 const path = require('path');
 const resolve = dir => path.join(__dirname, dir);
 const axios = require('axios');
+const bodyParser = require('body-parser');
 
 module.exports = {
     publicPath: './',
@@ -64,6 +65,22 @@ module.exports = {
                     params: req.query
                 }).then(response => {
                     res.json(response.data)
+                }).catch(err => {
+                    console.log(err);
+                })
+            })
+
+            // 歌曲URL
+            app.post('/api/getPurlUrl', bodyParser.json(), function (req, res) {
+                const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+                axios.post(url, req.body, {
+                    headers: {
+                        referer: 'https://y.qq.com/',
+                        origin: 'https://y.qq.com',
+                        'Content-type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(response => {
+                    res.json(response.data);
                 }).catch(err => {
                     console.log(err);
                 })

@@ -22,6 +22,7 @@
             class="list-group-item"
             v-for="item of singer.items"
             :key="item.id"
+            @click="selectItem(item)"
           >
             <img class="avatar" width="50" height="50" v-lazy="item.avatar" />
             <span class="name">{{ item.name }}</span>
@@ -183,6 +184,10 @@ export default {
         this.listHeight.push(height);
       }
     },
+    // 派发点击事件
+    selectItem(item){
+      this.$emit('select', item)
+    }
   },
 };
 </script>
@@ -247,12 +252,12 @@ export default {
   //fixed title 固定栏
   .list-fixed {
     position: absolute;
-    top: 0;
+    top: -.05rem;
     left: 0;
     width: 100%;
     .fixed-title {
-      height: 0.6rem;
-      line-height: 0.6rem;
+      height: 0.65rem;
+      line-height: 0.65rem;
       padding-left: 0.4rem;
       font-size: $font-size-small;
       color: $color-text-l;

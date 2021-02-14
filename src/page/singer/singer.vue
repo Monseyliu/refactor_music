@@ -1,7 +1,9 @@
 <template>
   <div class="singer">
     <!-- 歌手列表 -->
-    <ListView :data="singers" />
+    <ListView :data="singers" @select="selectSinger" />
+    <!-- 歌手详情页 -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -10,6 +12,7 @@
 import { getSingerList } from "api/singer";
 import { ERR_OK } from "config/commonParams";
 import Singer from "config/singer";
+import { mapMutations } from "vuex";
 // 组件
 import ListView from "base/list-view/list-view";
 
@@ -29,11 +32,11 @@ export default {
     this._getSingerList();
   },
   methods: {
+    ...mapMutations(["SET_SINGER"]),
     _getSingerList() {
       getSingerList().then((res) => {
         if (res.code === ERR_OK) {
           this.singers = this._normalizeSinger(res.data.list);
-          console.log(this.singers);
         }
       });
     },
@@ -87,6 +90,13 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0);
       });
       return hot.concat(ret);
+    },
+    // list-view 派发的点击事件
+    selectSinger(singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`,
+      });
+      this.SET_SINGER(singer);
     },
   },
 };

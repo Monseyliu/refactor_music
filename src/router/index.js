@@ -10,6 +10,9 @@ const Singer = () => import('page/singer/singer')
 const Rank = () => import('page/rank/rank')
 const Search = () => import('page/search/search')
 
+// 子路由
+const SingerDetail = () => import('common/singer-detail/singer-detail')
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -17,7 +20,11 @@ const routes = [
   {
     path: '/home', redirect: '/recommend', component: Home, children: [
       { path: '/recommend', component: Recommend },
-      { path: '/singer', component: Singer },
+      {
+        path: '/singer', component: Singer, children: [
+          { path: ':id', component: SingerDetail }
+        ]
+      },
       { path: '/rank', component: Rank },
       { path: '/search', component: Search },
     ]
