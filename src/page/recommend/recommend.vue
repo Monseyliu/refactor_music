@@ -113,6 +113,7 @@ export default {
       position: relative;
       @include wh(100%, 0);
       padding-top: 40%;
+      overflow: hidden;
       .slider-content {
         position: absolute;
         @include wh(100%, 100%);
