@@ -34,6 +34,15 @@
         </div>
         <!-- 底部控制区 -->
         <div class="bottom">
+          <!-- 歌曲进度条 -->
+          <div class="progress-wrapper">
+            <span class="time time-l">{{ format(currentTime) }}</span>
+            <div class="progress-bar-wrapper">
+              <!-- 进度条组件 -->
+              <ProgressBar :percent="percent" @percentChange="onProgressBarChange" />
+            </div>
+            <span class="time time-r">{{ format(currentSong.duration) }}</span>
+          </div>
           <!-- 歌曲操作 -->
           <div class="operators">
             <!-- 播放模式 -->
@@ -96,6 +105,7 @@
       ref="audio"
       @canplay="readey"
       @error="error"
+      @timeupdate="updateTime"
     ></audio>
   </div>
 </template>
@@ -105,6 +115,8 @@
 import { mapGetters, mapMutations } from "vuex";
 import animations from "create-keyframe-animation";
 import { prefixStyle } from "config/dom";
+//组件
+import ProgressBar from "base/progress-bar/progress-bar";
 
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
@@ -113,6 +125,7 @@ export default {
   data() {
     return {
       songReady: false,
+      currentTime: 0,
     };
   },
   computed: {
@@ -133,8 +146,11 @@ export default {
       return this.playing ? "play" : "play pause";
     },
     disableCls() {
-        return this.songReady ? '' : 'disable';
+      return this.songReady ? "" : "disable";
     },
+    percent(){
+        return this.currentTime / this.currentSong.duration;
+    }
   },
   watch: {
     currentSong() {
@@ -149,6 +165,9 @@ export default {
         newPlaying ? audio.play() : audio.pause();
       });
     },
+  },
+  components: {
+    ProgressBar,
   },
   methods: {
     ...mapMutations([
@@ -258,6 +277,31 @@ export default {
     error() {
       this.songReady = true;
     },
+    //进度条
+    updateTime(e) {
+      this.currentTime = e.target.currentTime;
+    },
+    format(interval) {
+      interval = interval | 0;
+      const minute = this._pad((interval / 60) | 0);
+      const second = this._pad(interval % 60);
+      return `${minute}:${second}`;
+    },
+    _pad(num, n = 2) {
+      let len = num.toString().length;
+      while (len < n) {
+        num = "0" + num;
+        len++;
+      }
+      return num;
+    },
+    onProgressBarChange(percent){
+        // 接收子组件传递过来的percent 拖动
+        this.$refs.audio.currentTime = this.currentSong.duration * percent;
+        if(!this.playing) {
+            this.togglePlaying();
+        }
+    }
   },
 };
 </script>
@@ -356,6 +400,33 @@ export default {
       position: absolute;
       bottom: 1rem;
       width: 100%;
+      //歌曲进度条
+      .progress-wrapper {
+        display: flex;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+        padding: 0.2rem 0;
+        .time {
+          color: $color-text;
+          font-size: $font-size-small;
+          flex: 0 0 0.6rem;
+          line-height: 0.6rem;
+          width: 0.6rem;
+        }
+        .time-l {
+          text-align: left;
+          margin-right: 0.15rem;
+        }
+        .time-r {
+          text-align: right;
+          margin-left: 0.15rem;
+        }
+        .progress-bar-wrapper {
+          flex: 1;
+        }
+      }
+      //歌曲操作
       .operators {
         @include flex-align-center;
         i {
@@ -489,7 +560,7 @@ export default {
   animation-play-state: paused;
 }
 //禁用状态
-.disable{
-    color: $color-theme-d;
+.disable {
+  color: $color-theme-d;
 }
 </style>
