@@ -8,12 +8,15 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <!-- 播放器 -->
+    <Player />
   </div>
 </template>
 
 <script>
 import MyHeader from "common/my-header/my-header";
 import TabBar from "common/tab-bar/tab-bar";
+import Player from "common/player/player";
 
 export default {
   data() {
@@ -22,6 +25,7 @@ export default {
   components: {
     MyHeader,
     TabBar,
+    Player
   },
   methods: {},
 };
