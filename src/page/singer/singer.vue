@@ -1,7 +1,7 @@
 <template>
-  <div class="singer">
+  <div class="singer" ref="singer">
     <!-- 歌手列表 -->
-    <ListView :data="singers" @select="selectSinger" />
+    <ListView :data="singers" @select="selectSinger" ref="listView" />
     <!-- 歌手详情页 -->
     <router-view></router-view>
   </div>
@@ -13,6 +13,7 @@ import { getSingerList } from "api/singer";
 import { ERR_OK } from "config/commonParams";
 import Singer from "config/singer";
 import { mapMutations } from "vuex";
+import { playlistMixn } from "config/mixin";
 // 组件
 import ListView from "base/list-view/list-view";
 
@@ -20,6 +21,7 @@ const HOT_NAME = "热门";
 const HOT_SINGER_LEN = 10;
 
 export default {
+  mixins: [playlistMixn],
   data() {
     return {
       singers: [],
@@ -33,6 +35,13 @@ export default {
   },
   methods: {
     ...mapMutations(["SET_SINGER"]),
+    //mini播放器高度适配
+    handlPlaylist(playlist){
+      const bottom = playlist.length > 0 ? '1.2rem' : '';
+
+      this.$refs.singer.style.bottom = bottom;
+      this.$refs.listView.refresh();
+    },
     _getSingerList() {
       getSingerList().then((res) => {
         if (res.code === ERR_OK) {

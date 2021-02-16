@@ -187,6 +187,10 @@ export default {
     // 派发点击事件
     selectItem(item){
       this.$emit('select', item)
+    },
+    //刷新事件
+    refresh(){
+      this.$refs.listview.refresh();
     }
   },
 };

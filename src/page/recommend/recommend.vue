@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <Scroll :data="discList" ref="scroll" class="recomment-content">
       <div>
         <!-- 轮播 -->
@@ -53,8 +53,10 @@ import Loading from "base/loading/loading";
 // js 配置
 import { getRecommendList, getDiscList } from "api/recommend";
 import { ERR_OK } from "config/commonParams";
+import { playlistMixn } from "config/mixin";
 
 export default {
+  mixins: [playlistMixn],
   data() {
     return {
       recommends: [],
@@ -71,6 +73,13 @@ export default {
     this._getDiscList();
   },
   methods: {
+    //mini播放器高度适配
+    handlPlaylist(playlist){
+      const bottom = playlist.length > 0 ? '1.2rem' : '';
+
+      this.$refs.recommend.style.bottom = bottom;
+      this.$refs.scroll.refresh();
+    },
     //Banner
     _getRecommend() {
       getRecommendList().then((res) => {

@@ -1,4 +1,7 @@
-import { getSongsUrl } from "api/song"
+import { getSongsUrl, getLyric } from "api/song";
+import { Base64 } from "js-base64";
+import { ERR_OK } from "config/commonParams"
+
 
 // 歌曲相关类
 export default class Song {
@@ -12,6 +15,23 @@ export default class Song {
         this.image = image
         this.filename = `C400${this.mid}.m4a`
         this.url = url
+    }
+
+    // 处理歌词的方法
+    getLyric() {
+        if (this.lyric) {
+            return Promise.resolve(this.lyric)
+        }
+        return new Promise((resolve, reject) => {
+            getLyric(this.mid).then((res) => {
+                if (res.retcode === ERR_OK) {
+                    this.lyric = Base64.decode(res.lyric)
+                    resolve(this.lyric)
+                } else {
+                    reject(new Error('no lyric'))
+                }
+            })
+        })
     }
 }
 

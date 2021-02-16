@@ -8,7 +8,12 @@
     <!-- 背景图 -->
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="play-wrapper">
-        <div @click="random" ref="playBtn" v-show="songs.length > 0" class="play">
+        <div
+          @click="random"
+          ref="playBtn"
+          v-show="songs.length > 0"
+          class="play"
+        >
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -29,7 +34,7 @@
       </div>
       <!-- loading -->
       <div class="loading-container" v-show="!songs.length">
-          <Loading />
+        <Loading />
       </div>
     </scroll>
   </div>
@@ -43,12 +48,14 @@ import Loading from "base/loading/loading";
 // js配置
 import { prefixStyle } from "config/dom";
 import { mapActions } from "vuex";
+import { playlistMixn } from "config/mixin";
 
 const RESERVED_HEIGHT = 40;
 const transform = prefixStyle("transform");
 const backdrop = prefixStyle("backdrop-filter");
 
 export default {
+  mixins: [playlistMixn],
   props: {
     bgImage: {
       type: String,
@@ -89,25 +96,32 @@ export default {
     this.$refs.list.$el.style.top = `${this.imageHeight}px`;
   },
   methods: {
-      ...mapActions(['selectPlay', 'randomPlay']),
+    ...mapActions(["selectPlay", "randomPlay"]),
+    //mini播放器高度适配
+    handlPlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '1.2rem' : '';
+
+      this.$refs.list.$el.style.bottom = bottom;
+      this.$refs.list.refresh();
+    },
     scroll(pos) {
       this.scrollY = pos.y;
     },
     back() {
       this.$router.back();
     },
-    selectItem(item, index){
-        // 选择播放的歌曲，
-        this.selectPlay({
-            list: this.songs,
-            index
-        })
+    selectItem(item, index) {
+      // 选择播放的歌曲，
+      this.selectPlay({
+        list: this.songs,
+        index,
+      });
     },
-    random(){
+    random() {
       this.randomPlay({
-        list: this.songs
-      })
-    }
+        list: this.songs,
+      });
+    },
   },
   watch: {
     scrollY(newVal) {
@@ -142,7 +156,7 @@ export default {
   components: {
     Scroll,
     SongList,
-    Loading
+    Loading,
   },
 };
 </script>
@@ -239,11 +253,11 @@ export default {
       padding: 0.4rem 0.6rem;
     }
     // loading
-    .loading-container{
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 100%;
+    .loading-container {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
     }
   }
 }
