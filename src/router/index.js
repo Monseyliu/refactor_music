@@ -9,6 +9,7 @@ const Recommend = () => import('page/recommend/recommend')
 const Singer = () => import('page/singer/singer')
 const Rank = () => import('page/rank/rank')
 const Search = () => import('page/search/search')
+const Disc = () => import('common/disc/disc')
 
 // 子路由
 const SingerDetail = () => import('common/singer-detail/singer-detail')
@@ -19,7 +20,9 @@ const routes = [
   { path: '/', redirect: '/home' },
   {
     path: '/home', redirect: '/recommend', component: Home, children: [
-      { path: '/recommend', component: Recommend },
+      { path: '/recommend', component: Recommend, children:[
+        { path: ':id', component: Disc }
+      ] },
       {
         path: '/singer', component: Singer, children: [
           { path: ':id', component: SingerDetail }

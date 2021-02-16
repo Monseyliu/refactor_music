@@ -8,6 +8,7 @@ const state = {
     sequenceList: [], //顺序列表-用于随机播放
     mode: playMode.sequence, //播放模式
     currentIndex: -1, //当前播放歌曲索引
+    disc: {}, //歌单对象
 }
 
 export default state;

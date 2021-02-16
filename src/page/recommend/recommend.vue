@@ -21,7 +21,7 @@
           <!-- 歌单列表 -->
           <div class="list-wrapper">
             <ul>
-              <li class="list-item" v-for="item of discList" :key="item.dissid">
+              <li @click="selectItem(item)" class="list-item" v-for="item of discList" :key="item.dissid">
                 <img
                   width="60"
                   height="60"
@@ -42,6 +42,8 @@
     <div class="loading-wrapper" v-show="!discList.length">
       <Loading />
     </div>
+    <!-- 子路由容器 -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -54,6 +56,7 @@ import Loading from "base/loading/loading";
 import { getRecommendList, getDiscList } from "api/recommend";
 import { ERR_OK } from "config/commonParams";
 import { playlistMixn } from "config/mixin";
+import { mapMutations } from "vuex"
 
 export default {
   mixins: [playlistMixn],
@@ -73,6 +76,7 @@ export default {
     this._getDiscList();
   },
   methods: {
+    ...mapMutations(['SET_DISC']),
     //mini播放器高度适配
     handlPlaylist(playlist){
       const bottom = playlist.length > 0 ? '1.2rem' : '';
@@ -103,6 +107,12 @@ export default {
         this.checkLoaded = true;
       }
     },
+    selectItem(item){
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      })
+      this.SET_DISC(item)
+    }
   },
 };
 </script>
