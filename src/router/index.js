@@ -10,6 +10,7 @@ const Singer = () => import('page/singer/singer')
 const Rank = () => import('page/rank/rank')
 const Search = () => import('page/search/search')
 const Disc = () => import('common/disc/disc')
+const TopList = () => import('common/top-list/top-list')
 
 // 子路由
 const SingerDetail = () => import('common/singer-detail/singer-detail')
@@ -28,7 +29,9 @@ const routes = [
           { path: ':id', component: SingerDetail }
         ]
       },
-      { path: '/rank', component: Rank },
+      { path: '/rank', component: Rank, children: [
+        { path: ':id', component: TopList }
+      ] },
       { path: '/search', component: Search },
     ]
   }

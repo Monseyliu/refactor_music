@@ -9,6 +9,7 @@ const state = {
     mode: playMode.sequence, //播放模式
     currentIndex: -1, //当前播放歌曲索引
     disc: {}, //歌单对象
+    topList: {},
 }
 
 export default state;
