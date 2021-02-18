@@ -55,11 +55,11 @@ export default {
     }, 20);
   },
   watch: {
-      data() {
-          setTimeout(() => {
-              this.refresh();
-          },this.refreshDelay)
-      }
+    data() {
+      setTimeout(() => {
+        this.refresh();
+      }, this.refreshDelay);
+    },
   },
   methods: {
     _initScroll() {
@@ -77,16 +77,18 @@ export default {
           this.$emit("scroll", pos);
         });
       }
+      //上拉刷新
       if (this.pullup) {
         this.scroll.on("scrollEnd", () => {
           if (this.scroll.y <= this.scroll.maxScrollY + 50) {
-            this.$emit("scrollEnd");
+            this.$emit("scrollToEnd");
           }
         });
       }
+    
       if (this.beforeScroll) {
         this.scroll.on("beforeScrollStart", () => {
-          this.$emit("beforeScrollStart");
+          this.$emit("beforeScroll");
         });
       }
     },
