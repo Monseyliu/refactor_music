@@ -165,11 +165,15 @@ export default {
       } else {
         this.insertSong(item);
       }
+      this.$emit('select')
     },
-    //
+    //手机键盘处理
     listScroll() {
       this.$emit("listScroll");
     },
+    refresh(){
+        this.$refs.suggest.refresh();
+    }
   },
 };
 </script>

@@ -15,3 +15,5 @@ export const topList = state => state.topList;
 export const currentSong = state => {
     return state.playlist[state.currentIndex] || {};
 }
+//搜索历史
+export const searchHistory = state => state.searchHistory;

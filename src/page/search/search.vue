@@ -5,27 +5,57 @@
       <SearchBox ref="searchBox" @query="onQueryChange" />
     </div>
     <!-- 热词 -->
-    <div class="shortcut-wrapper" v-show="!query">
-      <div class="shortcut">
-        <!-- 热词 -->
-        <div class="hot-key">
-          <h1 class="title">热门搜索</h1>
-          <ul>
-            <li
-              @click="addQuery(item.k)"
-              class="item"
-              v-for="item of hotKey"
-              :key="item.n"
-            >
-              <span>{{ item.k }}</span>
-            </li>
-          </ul>
+    <div class="shortcut-wrapper" v-show="!query" ref="shorcutWrapper">
+      <Scroll class="shortcut" :data="shortcut" ref="shortcut">
+        <div>
+          <!-- 热词 -->
+          <div class="hot-key">
+            <h1 class="title">热门搜索</h1>
+            <ul>
+              <li
+                @click="addQuery(item.k)"
+                class="item"
+                v-for="item of hotKey"
+                :key="item.n"
+              >
+                <span>{{ item.k }}</span>
+              </li>
+            </ul>
+          </div>
+          <!-- 搜索历史 -->
+          <div class="search-history" v-show="searchHistory.length">
+            <h1 class="title">
+              <span class="text">搜索历史</span>
+              <span class="clear" @click="showConfirm">
+                <i class="icon-clear"></i>
+              </span>
+            </h1>
+            <SearchList
+              :searches="searchHistory"
+              @deleteOne="deleteSearchHistory"
+              @select="addQuery"
+            />
+          </div>
         </div>
-      </div>
+      </Scroll>
     </div>
     <!-- 搜索结果 -->
-    <div class="search-result" v-show="query">
-      <Suggest :query="query" @listScroll="blurInput" />
+    <div class="search-result" v-show="query" ref="searchResult">
+      <Suggest
+        ref="suggest"
+        @select="saveSearch"
+        :query="query"
+        @listScroll="blurInput"
+      />
+    </div>
+    <!-- confirm 弹窗组件 -->
+    <div class="confirm-container">
+      <Confirm
+        @confirm="clearSearchHistory"
+        ref="confirm"
+        text="是否清空所有搜索历史"
+        confirmBtnText="清空"
+      />
     </div>
     <!-- 子组件容器 -->
     <router-view></router-view>
@@ -36,11 +66,17 @@
 //组件
 import SearchBox from "base/search-box/search-box";
 import Suggest from "common/suggest/suggest";
+import SearchList from "base/search-list/search-list";
+import Confirm from "base/confirm/confirm";
+import Scroll from "base/scroll/scroll";
 //js 配置
 import { getHotKey } from "api/search";
 import { ERR_OK } from "config/commonParams";
+import { mapActions, mapGetters } from "vuex";
+import { playlistMixn } from "config/mixin";
 
 export default {
+  mixins: [playlistMixn],
   data() {
     return {
       hotKey: [],
@@ -50,11 +86,44 @@ export default {
   components: {
     SearchBox,
     Suggest,
+    SearchList,
+    Confirm,
+    Scroll,
   },
   created() {
     this._getHotKey();
   },
+  watch: {
+    query(newQuery) {
+      if (!newQuery) {
+        setTimeout(() => {
+          this.$refs.shortcut.refresh();
+        }, 20);
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["searchHistory"]),
+    shortcut() {
+      return this.hotKey.concat(this.searchHistory);
+    },
+  },
   methods: {
+    ...mapActions([
+      "saveSearchHistory",
+      "deleteSearchHistory",
+      "clearSearchHistory",
+    ]),
+    //mini 播放器高度适配
+    handlPlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "1.2rem" : "";
+
+      this.$refs.shorcutWrapper.style.bottom = bottom;
+      this.$refs.shortcut.refresh();
+
+      this.$refs.searchResult.style.bottom = bottom;
+      this.$refs.suggest.refresh();
+    },
     _getHotKey() {
       getHotKey().then((res) => {
         if (res.code === ERR_OK) {
@@ -70,9 +139,17 @@ export default {
       this.query = query;
     },
     //收其手机键盘
-    blurInput(){
-        this.$refs.searchBox.blur();
-    }
+    blurInput() {
+      this.$refs.searchBox.blur();
+    },
+    //保存搜索历史
+    saveSearch() {
+      this.saveSearchHistory(this.query);
+    },
+    showConfirm() {
+      this.$refs.confirm.show();
+      //this.clearSearchHistory();
+    },
   },
 };
 </script>
@@ -93,6 +170,7 @@ export default {
     .shortcut {
       height: 100%;
       overflow: hidden;
+      //热刺
       .hot-key {
         margin: 0 0.4rem 0.4rem 0.4rem;
         .title {
@@ -108,6 +186,28 @@ export default {
           background: $color-highlight-background;
           font-size: $font-size-medium;
           color: $color-text-d;
+        }
+      }
+      //搜索历史
+      .search-history {
+        position: relative;
+        margin: 0 0.4rem;
+        .title {
+          display: flex;
+          align-items: center;
+          height: 0.8rem;
+          font-size: $font-size-medium;
+          color: $color-text-l;
+          .text {
+            flex: 1;
+          }
+          .clear {
+            @include ellipsis;
+            .icon-clear {
+              font-size: $font-size-medium;
+              color: $color-text-d;
+            }
+          }
         }
       }
     }

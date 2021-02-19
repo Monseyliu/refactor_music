@@ -1,4 +1,5 @@
-import { playMode } from 'config/playMode'
+import { playMode } from 'config/playMode';
+import { loadSearch } from 'config/cache';
 
 const state = {
     singer: {}, //歌手数据
@@ -9,7 +10,8 @@ const state = {
     mode: playMode.sequence, //播放模式
     currentIndex: -1, //当前播放歌曲索引
     disc: {}, //歌单对象
-    topList: {},
+    topList: {}, 
+    searchHistory: loadSearch() //搜索历史
 }
 
 export default state;

@@ -1,6 +1,7 @@
 import * as types from './mutation-types';
 import { playMode } from 'config/playMode';
-import { shuffle } from 'config/util'
+import { shuffle } from 'config/util';
+import { saveSearch, deleteSearch, clearSearch } from 'config/cache';
 
 //选择播放歌曲
 export const selectPlay = function ({ commit, state }, { list, index }) {
@@ -65,8 +66,8 @@ export const insertSong = function ({ commit, state }, song) {
     let fsIndex = findIndex(sequenceList, song);
 
     sequenceList.splice(currentSIndex, 0, song);
-    if(fsIndex > -1) {
-        if(currentSIndex > fsIndex ){
+    if (fsIndex > -1) {
+        if (currentSIndex > fsIndex) {
             sequenceList.splice(fsIndex, 1)
         } else {
             sequenceList.splice(fsIndex + 1, 1)
@@ -78,4 +79,17 @@ export const insertSong = function ({ commit, state }, song) {
     commit(types.SET_CURRENT_INDEX, currentIndex);
     commit(types.SET_FULL_SCREEN, true);
     commit(types.SET_PLAING_STATE, true)
+}
+
+//保存搜索历史
+export const saveSearchHistory = function ({ commit }, query) {
+    commit(types.SET_SEARCH_HISTORY, saveSearch(query));
+}
+//删除一个搜索历史
+export const deleteSearchHistory = function ({ commit }, query) {
+    commit(types.SET_SEARCH_HISTORY, deleteSearch(query));
+}
+//删除所有搜索历史
+export const clearSearchHistory = function ({ commit }) {
+    commit(types.SET_SEARCH_HISTORY, clearSearch());
 }
