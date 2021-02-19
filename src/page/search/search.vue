@@ -72,15 +72,14 @@ import Scroll from "base/scroll/scroll";
 //js 配置
 import { getHotKey } from "api/search";
 import { ERR_OK } from "config/commonParams";
-import { mapActions, mapGetters } from "vuex";
-import { playlistMixn } from "config/mixin";
+import { mapActions } from "vuex";
+import { playlistMixn, searchMixin } from "config/mixin";
 
 export default {
-  mixins: [playlistMixn],
+  mixins: [playlistMixn, searchMixin],
   data() {
     return {
       hotKey: [],
-      query: "",
     };
   },
   components: {
@@ -103,15 +102,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["searchHistory"]),
     shortcut() {
       return this.hotKey.concat(this.searchHistory);
     },
   },
   methods: {
     ...mapActions([
-      "saveSearchHistory",
-      "deleteSearchHistory",
       "clearSearchHistory",
     ]),
     //mini 播放器高度适配
@@ -130,21 +126,6 @@ export default {
           this.hotKey = res.data.hotkey.slice(0, 15);
         }
       });
-    },
-    addQuery(query) {
-      this.$refs.searchBox.setQuery(query);
-    },
-    //监听query变化
-    onQueryChange(query) {
-      this.query = query;
-    },
-    //收其手机键盘
-    blurInput() {
-      this.$refs.searchBox.blur();
-    },
-    //保存搜索历史
-    saveSearch() {
-      this.saveSearchHistory(this.query);
     },
     showConfirm() {
       this.$refs.confirm.show();

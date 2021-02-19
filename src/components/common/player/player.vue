@@ -162,7 +162,7 @@
 
 <script>
 // js 配置
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import animations from "create-keyframe-animation";
 import { prefixStyle } from "config/dom";
 import Lyric from "lyric-parser";
@@ -244,6 +244,7 @@ export default {
     PlayList,
   },
   methods: {
+    ...mapActions(["savePlayHistory"]),
     ...mapMutations([
       "SET_FULL_SCREEN",
     ]),
@@ -379,6 +380,8 @@ export default {
     },
     readey() {
       this.songReady = true;
+      //保存播放历史
+      this.savePlayHistory(this.currentSong);
     },
     error() {
       this.songReady = true;

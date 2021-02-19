@@ -1,5 +1,5 @@
 //共用逻辑处理
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { playMode } from "config/playMode";
 import { shuffle } from "config/util";
 
@@ -46,7 +46,7 @@ export const playerMixin = {
             "SET_CURRENT_INDEX",
             "SET_PLAY_MODE",
             "SET_PLAYLIST",
-          ]),
+        ]),
         //点击切换播放模式
         changeMode() {
             // 更改播放模式
@@ -67,6 +67,38 @@ export const playerMixin = {
                 return item.id === this.currentSong.id;
             });
             this.SET_CURRENT_INDEX(index);
+        },
+    },
+}
+
+//搜索歌曲相关
+export const searchMixin = {
+    data() {
+        return {
+            query: "",
+            refreshDelay: 100
+        }
+    },
+    computed: {
+        ...mapGetters(["searchHistory"]),
+    },
+    methods: {
+        ...mapActions(["saveSearchHistory",
+            "deleteSearchHistory",]),
+        //收其手机键盘
+        blurInput() {
+            this.$refs.searchBox.blur();
+        },
+        //保存搜索历史
+        saveSearch() {
+            this.saveSearchHistory(this.query);
+        },
+        //监听query变化
+        onQueryChange(query) {
+            this.query = query;
+        },
+        addQuery(query) {
+            this.$refs.searchBox.setQuery(query);
         },
     },
 }

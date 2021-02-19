@@ -13,7 +13,7 @@
           </h1>
         </div>
         <!-- 歌曲部分 -->
-        <Scroll :data="sequenceList" ref="listContent" class="list-content">
+        <Scroll :data="sequenceList" :refreshDelay="refreshDelay" ref="listContent" class="list-content">
           <transition-group name="list" tag="ul" ref="list">
             <li
               class="item"
@@ -35,7 +35,7 @@
         </Scroll>
         <!-- 添加新的歌曲 -->
         <div class="list-operate">
-          <div class="add">
+          <div class="add" @click="addSong">
             <i class="icon-add"></i>
             <span class="text">添加歌曲到队列</span>
           </div>
@@ -53,6 +53,7 @@
         confirmBtnText="清空"
       />
       <!-- 添加歌曲组件 -->
+      <AddSong ref="addSong" />
     </div>
   </transition>
 </template>
@@ -65,17 +66,20 @@ import { playerMixin } from "config/mixin";
 //组件
 import Scroll from "base/scroll/scroll";
 import Confirm from "base/confirm/confirm";
+import AddSong from "common/add-song/add-song"
 
 export default {
   mixins: [playerMixin],
   data() {
     return {
       showFlag: false,
+      refreshDelay: 100
     };
   },
   components: {
     Scroll,
     Confirm,
+    AddSong
   },
   computed: {
     modeText() {
@@ -143,6 +147,10 @@ export default {
       this.deleteSongList();
       this.$refs.confirm.hide();
     },
+    //添加歌曲
+    addSong(){
+        this.$refs.addSong.show();
+    }
   },
 };
 </script>

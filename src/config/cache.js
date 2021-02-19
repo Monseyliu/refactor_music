@@ -4,6 +4,9 @@ import storage from "good-storage";
 const SEARCH_KEY = "_search_";
 const SEARCH_MAX_LENGTH = 15;
 
+const PLAY_KEY = "_play_";
+const PLAY_MAX_LENGTH = 200;
+
 //搜索结果
 export function saveSearch(query) {
     let searches = storage.get(SEARCH_KEY, []);
@@ -60,4 +63,18 @@ function deleteFromArray(arr, compare) {
 export function clearSearch() {
     storage.remove(SEARCH_KEY);
     return [];
+}
+
+//存储播放历史记录
+export function savePlay(song) {
+    let songs = storage.get(PLAY_KEY, []);
+    insertArray(songs, song, (item) => {
+        return item.id === song.id
+    }, PLAY_MAX_LENGTH)
+    storage.set(PLAY_KEY, songs);
+    return songs;
+}
+//读取
+export function loadPlay(){
+    return storage.get(PLAY_KEY, [])
 }
