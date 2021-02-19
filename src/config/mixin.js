@@ -1,9 +1,11 @@
 //共用逻辑处理
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
+import { playMode } from "config/playMode";
+import { shuffle } from "config/util";
 
 //mini播放器高度适配
 export const playlistMixn = {
-    computed:{
+    computed: {
         ...mapGetters(['playlist'])
     },
     mounted() {
@@ -12,14 +14,59 @@ export const playlistMixn = {
     activated() {
         this.handlPlaylist(this.playlist);
     },
-    watch:{
-        playlist(newVal){
+    watch: {
+        playlist(newVal) {
             this.handlPlaylist(newVal);
         }
     },
     methods: {
-        handlPlaylist(){
+        handlPlaylist() {
             throw new Error('component must implement handlePlaylist method')
         }
+    },
+}
+
+//播放模式等设置
+export const playerMixin = {
+    computed: {
+        ...mapGetters(["sequenceList", "currentSong", "playlist", "mode"]),
+        // 播放模式-icon设置
+        iconMode() {
+            return this.mode === playMode.sequence
+                ? "icon-sequence"
+                : this.mode === playMode.loop
+                    ? "icon-loop"
+                    : "icon-random";
+        }
+    },
+    methods: {
+        ...mapMutations([
+            "SET_FULL_SCREEN",
+            "SET_PLAING_STATE",
+            "SET_CURRENT_INDEX",
+            "SET_PLAY_MODE",
+            "SET_PLAYLIST",
+          ]),
+        //点击切换播放模式
+        changeMode() {
+            // 更改播放模式
+            const mode = (this.mode + 1) % 3;
+            this.SET_PLAY_MODE(mode);
+            let list = null;
+            if (mode === playMode.random) {
+                list = shuffle(this.sequenceList);
+            } else {
+                list = this.sequenceList;
+            }
+            this.resetCurrentIndex(list);
+            this.SET_PLAYLIST(list);
+        },
+        resetCurrentIndex(list) {
+            // 控制当前歌曲
+            let index = list.findIndex((item) => {
+                return item.id === this.currentSong.id;
+            });
+            this.SET_CURRENT_INDEX(index);
+        },
     },
 }
