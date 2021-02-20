@@ -1,7 +1,7 @@
 import * as types from './mutation-types';
 import { playMode } from 'config/playMode';
 import { shuffle } from 'config/util';
-import { saveSearch, deleteSearch, clearSearch, savePlay } from 'config/cache';
+import { saveSearch, deleteSearch, clearSearch, savePlay, saveFavorite, deleteFavorite } from 'config/cache';
 
 //选择播放歌曲
 export const selectPlay = function ({ commit, state }, { list, index }) {
@@ -129,3 +129,11 @@ export const savePlayHistory = function ({ commit }, song) {
     commit(types.SET_PLAY_HISTORY, savePlay(song));
 }
 
+//保存收藏列表
+export const saveFavoriteList = function ({ commit }, song) {
+    commit(types.SET_FAVORITE_LIST, saveFavorite(song));
+}
+//移除收藏列表
+export const deleteFavoriteList = function ({ commit }, song) {
+    commit(types.SET_FAVORITE_LIST, deleteFavorite(song));
+}

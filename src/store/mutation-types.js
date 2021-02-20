@@ -11,6 +11,8 @@ export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX';
 //歌单
 export const SET_DISC = 'SET_DISC';
 export const SET_TOP_LIST = 'SET_TOP_LIST';
-//搜索历史 播放历史
+//搜索历史 播放历史 
 export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY';
 export const SET_PLAY_HISTORY = 'SET_PLAY_HISTORY';
+// 收藏列表
+export const SET_FAVORITE_LIST = 'SET_FAVORITE_LIST';

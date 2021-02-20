@@ -1,5 +1,5 @@
 import { playMode } from 'config/playMode';
-import { loadSearch, loadPlay } from 'config/cache';
+import { loadSearch, loadPlay, loadFavorite } from 'config/cache';
 
 const state = {
     singer: {}, //歌手数据
@@ -13,6 +13,7 @@ const state = {
     topList: {}, 
     searchHistory: loadSearch(), //搜索历史
     playHistory: loadPlay(), //播放历史
+    favoriteList: loadFavorite(), //收藏礼拜
 }
 
 export default state;

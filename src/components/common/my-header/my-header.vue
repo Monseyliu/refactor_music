@@ -2,9 +2,9 @@
   <div class="my_header">
     <div class="icon"></div>
     <span class="text">Favorit-Music</span>
-    <div class="mine">
+    <router-link class="mine" to="/user" tag="div">
       <i class="icon-mine"></i>
-    </div>
+    </router-link>
   </div>
 </template>
 

@@ -109,7 +109,11 @@
               <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon-favorite"></i>
+              <i
+                class="icon"
+                :class="getFavoriteIcon(currentSong)"
+                @click="toggleFavorite(currentSong)"
+              ></i>
             </div>
           </div>
         </div>
@@ -152,7 +156,7 @@
     <audio
       :src="currentSong.url"
       ref="audio"
-      @canplay="readey"
+      @play="readey"
       @error="error"
       @timeupdate="updateTime"
       @ended="end"
@@ -194,11 +198,7 @@ export default {
     this.touch = {};
   },
   computed: {
-    ...mapGetters([
-      "fullScreen",
-      "playing",
-      "currentIndex"
-    ]),
+    ...mapGetters(["fullScreen", "playing", "currentIndex"]),
     playIcon() {
       return this.playing ? "icon-pause" : "icon-play";
     },
@@ -223,9 +223,12 @@ export default {
 
       if (this.currentLyric) {
         this.currentLyric.stop();
+        this.currentTime = 0;
+        this.playingLyric = "";
+        this.currentLineNum = 0;
       }
-
-      setTimeout(() => {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
         this.$refs.audio.play();
         this.getLyric();
       }, 1000);
@@ -245,9 +248,7 @@ export default {
   },
   methods: {
     ...mapActions(["savePlayHistory"]),
-    ...mapMutations([
-      "SET_FULL_SCREEN",
-    ]),
+    ...mapMutations(["SET_FULL_SCREEN"]),
     back() {
       this.SET_FULL_SCREEN(false);
     },
@@ -330,6 +331,7 @@ export default {
 
       if (this.playlist.length === 1) {
         this.loop();
+        return;
       } else {
         let index = this.currentIndex - 1;
         if (index === -1) {
@@ -348,6 +350,7 @@ export default {
 
       if (this.playlist.length === 1) {
         this.loop();
+        return;
       } else {
         let index = this.currentIndex + 1;
         if (index === this.playlist.length) {
@@ -421,6 +424,8 @@ export default {
       this.currentSong
         .getLyric()
         .then((lyric) => {
+          if (this.currentSong.lyric !== lyric) return;
+
           this.currentLyric = new Lyric(lyric, this.handleLyric);
           if (this.playing) {
             this.currentLyric.play();

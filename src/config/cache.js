@@ -7,6 +7,9 @@ const SEARCH_MAX_LENGTH = 15;
 const PLAY_KEY = "_play_";
 const PLAY_MAX_LENGTH = 200;
 
+const FAVORITE_KEY = "_favorite_";
+const FAVORITE_LENGTH = 200;
+
 //搜索结果
 export function saveSearch(query) {
     let searches = storage.get(SEARCH_KEY, []);
@@ -75,6 +78,34 @@ export function savePlay(song) {
     return songs;
 }
 //读取
-export function loadPlay(){
+export function loadPlay() {
     return storage.get(PLAY_KEY, [])
+}
+
+
+//存储收藏列表
+export function saveFavorite(song) {
+    let songs = storage.get(FAVORITE_KEY, []);
+
+    insertArray(songs, song, (item) => {
+        return song.id === item.id;
+    }, FAVORITE_LENGTH);
+
+    storage.set(FAVORITE_KEY, songs);
+    return songs;
+}
+//移除收藏列表
+export function deleteFavorite(song) {
+    let songs = storage.get(FAVORITE_KEY, []);
+
+    deleteFromArray(songs, (item) => {
+        return song.id === item.id;
+    })
+
+    storage.set(FAVORITE_KEY, songs);
+    return songs;
+}
+//加载收藏列表
+export function loadFavorite() {
+    return storage.get(FAVORITE_KEY, []);
 }

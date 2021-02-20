@@ -13,7 +13,8 @@ const Disc = () => import('common/disc/disc')
 const TopList = () => import('common/top-list/top-list')
 
 // 子路由
-const SingerDetail = () => import('common/singer-detail/singer-detail')
+const SingerDetail = () => import('common/singer-detail/singer-detail');
+const User = () => import('common/user-center/user-center');
 
 Vue.use(VueRouter)
 
@@ -35,6 +36,7 @@ const routes = [
       { path: '/search', component: Search, children:[
         { path: ':id', component: SingerDetail}
       ] },
+      { path: '/user', component: User}
     ]
   }
 ]
