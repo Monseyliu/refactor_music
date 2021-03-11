@@ -19,3 +19,21 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 # refactor_music
 # music
+
+###
+<!-- devServer: {
+        proxy: {
+            // 配置跨域
+            '/api': {
+                target: 'https://c.iwanmen.com/element/api/',
+                ws: true,
+                changOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        },
+        before: app => {
+
+        }
+    }, -->
